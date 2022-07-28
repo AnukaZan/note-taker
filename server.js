@@ -1,8 +1,6 @@
-const noteRoutes = require('./routes/apiRoutes');
-const htmlRoutes = require('./routes/htmlRoutes');
-const {
-    createNewNote
-  } = require("./lib/notes");
+// const noteRoutes = require('./routes/apiRoutes');
+// const htmlRoutes = require('./routes/htmlRoutes');
+const {createNewNote} = require("./lib/notes");
 
 const fs= require('fs');
 
@@ -21,15 +19,32 @@ app.use(express.urlencoded({ extended: true}));
 app.use(express.json());
 app.use(express.static('public'));
 
-// app.use('/notes', noteRoutes);
+// app.use('/api', apiRoutes);
 // app.use('/', htmlRoutes);
 
-app.post("/notes", (req, res) => {
-    // req.body.id = notes.length.toString();
+app.get('/api/notes', (req, res) => {
+    let results = notes;
+    res.json(results);
+});
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/index.html'));
+});
+
+app.get('/notes', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/notes.html'));
+});
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/index.html'));
+});
+
+app.post("/api/notes", (req, res) => {
+    req.body.id = notes.length.toString();
 
     const note = createNewNote(req.body, notes);
     res.json(note);
-    console.log("POSTED")
+    console.log("POSTED");
 });
 
 
